@@ -17,7 +17,7 @@ sub new {
     my $timestr = ctime($time);
     $timestr =~ s/\n$//;
     my %args = (
-        __meta    => {deleted => 0},
+        __meta__deleted => 0,
         time      => $timestr,
         unix_time => $time,
         login     => 'none',
@@ -58,12 +58,12 @@ sub __set_attribute {
 
 sub __format_attributes {
     my $self = shift;
-    my %skip = map {$_ => 1} qw(unix_time fields id __meta __fmtext type);
+    my $skip = '^(unix_time|fields|id|__meta.*|__fmtext|type)$';
     my $text = "";
     my @keys = sort keys %$self;
     for my $k (@keys) {
         my $v = $self->{$k};
-        unless($skip{$k}) {
+        unless($k =~ /$skip/o) {
             $text .= sprintf("  %-15.15s: %-35.35s\n", $k, $v);
         }
     }
@@ -74,7 +74,7 @@ sub set_meta {
     my $self = shift;
     my $key = shift;
     my $val = shift;
-    $self->{__meta}{$key} = $val;
+    $self->{'__meta__' . $key} = $val;
     undef $self->{__fmtext};
     BarnOwl::View->consider_message($self);
 }
@@ -82,7 +82,7 @@ sub set_meta {
 sub get_meta {
     my $self = shift;
     my $key  = shift;
-    return $self->{__meta}{$key};
+    return $self->{'__meta__' . $key};
 }
 
 sub type        { return shift->{"type"}; }
