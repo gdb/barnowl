@@ -702,6 +702,10 @@ int owl_global_get_nextmsgid(owl_global *g) {
   return(g->nextmsgid++);
 }
 
+void owl_global_set_nextmsgid(owl_global *g, int value) {
+  g->nextmsgid = value;
+}
+
 /* current view */
 
 owl_view *owl_global_get_current_view(owl_global *g) {
