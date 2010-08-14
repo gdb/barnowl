@@ -113,9 +113,13 @@ sub get_size {
 
 sub timestr {
     my $time = shift;
-    my $str = ctime($time);
-    $str =~ s/\n$//;
-    return $str;
+    if (defined $time) {
+	my $str = ctime($time);
+	$str =~ s/\n$//;
+	return $str;
+    } else {
+	return "unknown";
+    }
 }
 
 sub load_base {
